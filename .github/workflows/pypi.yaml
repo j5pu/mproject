@@ -1,0 +1,16 @@
+name: pypi
+
+on:
+  push:
+    tags:
+      - '**'
+
+jobs:
+  pypi:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: j5pu/actions/pypi@main
+        with:
+          pypi_password: ${{ secrets.PYPI_CLEANUP_PASSWORD }}
+          pypi_token: ${{ secrets.PYPI_API_TOKEN }}
+          version: "3.10"

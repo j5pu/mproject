@@ -1,0 +1,50 @@
+[build-system]
+requires = ['setuptools', 'setuptools_scm', 'wheel']
+build-backend = 'setuptools.build_meta'
+
+[tool.setuptools_scm]
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
+log_level = 'ERROR'
+python_files = 'test_*.py'
+norecursedirs = [
+    '*.egg', '.eggs', 'dist', 'build', 'docs', '.tox', '.git', '__pycache__', 'backup', 'scripts',
+    'templates', 'tmp', 'bin', 'venv'
+]
+doctest_optionflags = ['ELLIPSIS', 'NUMBER', 'NORMALIZE_WHITESPACE', 'IGNORE_EXCEPTION_DETAIL']
+filterwarnings = [
+    'ignore:please use dns.resolver.resolve\(\) instead:DeprecationWarning',
+    'ignore:invalid escape sequence \\:DeprecationWarning',
+    "ignore:private variables, such as '_Name__.*, will be normal attributes in 3.10:DeprecationWarning"
+]
+addopts = [
+    '--doctest-continue-on-failure',
+    '--doctest-ignore-import-errors',
+    '--doctest-modules',
+    '--doctest-report=ndiff',
+    '--full-trace',
+    '--ignore-glob=*/backup/*',
+    '--ignore-glob=*.sh',
+    '--ignore-glob=*/test/*',
+    '--ignore-glob=*/tmp/*',
+    '--showlocals',
+    '--strict-markers',
+    '--tb=long',
+    '-rA',  # “-r: short test summary info”, "-A: for all status.
+    '--verbosity=4',
+]
+
+[tool.tox]
+legacy_tox_ini = """
+[tox]
+envlist = py{38,39,310,311}
+isolated_build = True
+skip_missing_interpreters = true
+[testenv]
+passenv = USER
+deps =
+    pytest
+    pytest-asyncio
+commands = pytest
+"""

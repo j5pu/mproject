@@ -1,0 +1,37 @@
+name: tag
+
+on:
+  push:
+    branches:
+      - '**'
+  workflow_dispatch:
+
+env:
+  GITHUB_TOKEN: ${{ secrets.TOKEN }}
+
+jobs:
+  tests:
+    runs-on: ${{ matrix.os}}
+    strategy:
+      fail-fast: true
+      matrix:
+        os: [ ubuntu-latest ]
+        python: [ '3.8', '3.9', '3.10', '3.11.0-alpha.6' ]
+    steps:
+      - uses: actions/checkout@main
+      - name: Install dependencies
+        uses: actions/setup-python@main
+        with:
+          python-version: ${{ matrix.python }}
+      - run: |
+          pip install pip-tools
+          pip-compile setup.cfg --extra test --output-file /tmp/requirements.txt
+          pip install -r /tmp/requirements.txt
+      - name: Run tests
+        run: python3 -m pytest
+  tag:
+    needs: [ tests ]
+    runs-on: ubuntu-latest
+    steps:
+      - id: tag
+        uses: j5pu/actions/tag@main
