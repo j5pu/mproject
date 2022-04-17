@@ -113,7 +113,6 @@ class OwnerRepo:
         """
         return cls(owner=path.parent.name, repo=path.name)
 
-
     def url(self, scheme: GitScheme = GIT_DEFAULT_SCHEME) -> furl:
         """
         Get Repository URL
